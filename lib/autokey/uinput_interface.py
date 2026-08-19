@@ -286,24 +286,39 @@ class UInputInterface(threading.Thread, MouseReadInterface, AbstractSysInterface
     #  @dlk3 - support multiple keyboards/mice
     def __grab_keyboard(self, devices, device):
         try:
-            #logger.debug("Device has the word \"keyboard\" as part of its name, grabbing it.")
-            keyboard = self.grab_device(devices, device.name)
+            # Grab by path: several HID nodes can share the same name
+            # (e.g. three "Logitech USB Receiver" devices).
+            keyboard = self.grab_device(devices, device.path)
             keyboard.grab()
             self.keyboards.append(keyboard)
             self.device_paths.append(keyboard.path)
-            #logger.debug("Keyboard: {}, Path: {}".format(keyboard.name, keyboard.path))
+            logger.info("Grabbed keyboard: {} ({})".format(keyboard.name, keyboard.path))
         except Exception as error:
-            logger.error(f"Could not grab keyboard device \"{dev.name}\" from list of devices found on system: {error}")
+            logger.error(f"Could not grab keyboard device \"{device.name}\" from list of devices found on system: {error}")
 
     def __grab_mouse(self, devices, device):
         try:
-            #logger.debug("Device has the word \"mouse\" as part of its name, grabbing it.")
-            mouse = self.grab_device(devices, device.name)
+            mouse = self.grab_device(devices, device.path)
             self.mice.append(mouse)
             self.device_paths.append(mouse.path)
-            #logger.debug("Mouse: {}, Path: {}".format(mouse.name, mouse.path))
+            logger.info("Grabbed mouse: {} ({})".format(mouse.name, mouse.path))
         except Exception as error:
-            logger.error(f"Could not grab mouse device  \"{dev.name}\" from list of devices found on system: {error}")
+            logger.error(f"Could not grab mouse device \"{device.name}\" from list of devices found on system: {error}")
+
+    @staticmethod
+    def _looks_like_keyboard(device):
+        """True if this HID node has letter keys plus Alt/Ctrl.
+
+        Many USB dongles are named e.g. "Logitech USB Receiver" with no
+        "keyboard" in the name, so name matching misses them.
+        """
+        if re.search("mouse", device.name, re.IGNORECASE):
+            return False
+        try:
+            keys = set(device.capabilities().get(e.EV_KEY, []))
+            return e.KEY_A in keys and (e.KEY_LEFTALT in keys or e.KEY_LEFTCTRL in keys)
+        except Exception:
+            return False
 
     def grab_multiple_devices(self):
         ### UINPUT Listener one for keyboard and eventually one for mouse
@@ -322,7 +337,7 @@ class UInputInterface(threading.Thread, MouseReadInterface, AbstractSysInterface
                 #logger.debug('This device has already been grabbed')
                 continue
 
-            if re.search("keyboard", dev.name, re.IGNORECASE):
+            if re.search("keyboard", dev.name, re.IGNORECASE) or self._looks_like_keyboard(dev):
                 self.__grab_keyboard(devices, dev)
             elif re.search("mouse", dev.name, re.IGNORECASE):
                 self.__grab_mouse(devices, dev)

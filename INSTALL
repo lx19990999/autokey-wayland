@@ -1,3 +1,16 @@
-$Id$
+Install AutoKey for Wayland
+==========================
 
-See https://autokey-wayland.readthedocs.io/en/latest/installation.html
+From this source tree (works on Fedora, RHEL/Rocky, Debian, Ubuntu; KDE or GNOME)::
+
+    ./install.sh
+
+That puts launchers in ~/.local/bin (autokey, autokey-qt, autokey-gtk),
+installs application-menu entries, and configures uinput access. After
+that you can start AutoKey from the menu or by running ``autokey``.
+
+    ./install.sh --help
+    ./uninstall.sh
+
+Distro packages (Fedora COPR / Debian) are documented at
+https://autokey-wayland.readthedocs.io/en/latest/installation.html

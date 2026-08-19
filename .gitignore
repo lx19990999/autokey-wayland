@@ -12,6 +12,7 @@ autokey-gnome-extension/46-orig
 
 # build artifacts
 autokey-gnome-extension/autokey-gnome-extension@autokey.shell-extension.zip
+.qscintilla-build/
 
 # Environments
 .env
@@ -28,3 +29,4 @@ venv.bak/
 
 test_coverage_annotated_source/
 test_coverage_report_html/
+20260818.md

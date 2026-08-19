@@ -122,7 +122,8 @@ ARGS = None
 # these lists.  AutoKey will recognize those without them being here.
 WAYLAND_KEYBOARD_DEVICE_LIST = (
     'Logitech K270',
-    'Logitech K400'
+    'Logitech K400',
+    'Logitech USB Receiver',
 )
 WAYLAND_MOUSE_DEVICE_LIST = (
     'Logitech MX Ergo'
