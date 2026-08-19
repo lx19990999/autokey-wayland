@@ -47,3 +47,56 @@ section of the documentation for guidance.
 * [develop](https://github.com/dlk3/autokey-wayland/tree/develop) - developing the next release.
 
 See, also, [Releases](https://github.com/dlk3/autokey-wayland/releases).
+
+## Installation
+
+This repository includes a user-local installer for systems without a distro
+package, or when you want a self-contained install under `~/.local`:
+
+```bash
+git clone https://github.com/lx19990999/autokey-wayland
+cd autokey-wayland
+./install.sh
+```
+
+On **KDE / Wayland**, install the Qt frontend only:
+
+```bash
+./install.sh --ui qt
+```
+
+After installation, start AutoKey from the application menu or run:
+
+```bash
+autokey        # prefers Qt on KDE
+autokey-qt
+autokey-gtk
+```
+
+Other options:
+
+```bash
+./install.sh --help
+./uninstall.sh
+```
+
+The installer creates `~/.local/bin` launchers, desktop entries, icons, a Python
+venv under `~/.local/share/autokey/venv`, and (with sudo) udev/uinput setup for
+keyboard injection on Wayland. See [INSTALL](INSTALL) for a short summary.
+
+### Verified environment
+
+The installer and `./install.sh --ui qt` flow were developed and tested on:
+
+| Item | Value |
+|------|-------|
+| OS | Rocky Linux 10.2 (RHEL/EL10, `dnf`) |
+| Desktop | KDE Plasma 6.6.4 (`plasma-workspace` 6.6.4) |
+| Session | Wayland (KWin 6.6.4, `libwayland-client` 1.24.0) |
+
+On this stack, AutoKey uses the **uinput** interface and **KWin** (via DBus) for
+window information. GNOME Shell extension steps are skipped automatically on KDE.
+
+Distro packages (Fedora COPR / Debian) remain documented at
+[autokey-wayland.readthedocs.io — Installation](https://autokey-wayland.readthedocs.io/en/latest/installation.html).
+
